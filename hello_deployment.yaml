@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: hello
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,16 +17,10 @@ spec:
       labels:
         app: hello
     spec:
-      affinity:
-        # ⬇⬇⬇ This ensures pods will land on separate hosts
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions: [{ key: app, operator: In, values: [hello] }]
-            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: hello-from
-        image: pbitty/hello-from:latest
+        image: nginx:1.20.0
+        imagePullPolicy: IfNotPresent
         ports:
           - name: http
             containerPort: 80
